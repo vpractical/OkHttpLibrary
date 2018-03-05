@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 
-import com.ywb.okhttplibrarydemo.Ok;
-import com.ywb.okhttplibrarydemo.callback.StringCallback;
-import com.ywb.okhttplibrarydemo.utils.LoggerInterceptor;
+import com.ywb.okhttplibrary.Ok;
+import com.ywb.okhttplibrary.callback.StringCallback;
+import com.ywb.okhttplibrary.utils.LoggerInterceptor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 
 		OkHttpClient okClient = new OkHttpClient.Builder()
-				.addInterceptor(new LoggerInterceptor("demo log "))
+				.addInterceptor(new LoggerInterceptor("demo log ----> "))
 				.connectTimeout(6 * 1000L, TimeUnit.MILLISECONDS)
 				.build();
 		Ok.initClient(okClient);
@@ -113,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
 				.addHeader("agent","valA")
 				.addHeader("agent11","a11")
 				.id(2)
-				.tag("Main主页请求")
+				.tag(this)
 				.content(json.toString())
-				.mediaType(Ok.getInstance().mediaTypeJson())
+				.mediaType(com.ywb.okhttplibrary.utils.MediaType.mediaTypeJson())
 				.build()
 				.execute(new ResStringCallBack());
 
@@ -165,5 +165,11 @@ public class MainActivity extends AppCompatActivity {
 			super.inProgress(progress, total, id);
 			L.e("progress = " + progress);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Ok.getInstance().cancelRequestByTag(this);
 	}
 }
